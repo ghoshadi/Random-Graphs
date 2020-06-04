@@ -1,5 +1,5 @@
 # Studying the Typical Distance in Erdős–Rényi Random Graph through Simulations
-# a project by Aditya Ghosh and Sayak Chatterjee, done under the supervision of Prof. Antar Bandyopadhyay
+# A project by Aditya Ghosh and Sayak Chatterjee, under the supervision of Prof. Antar Bandyopadhyay
 
 library(igraph)
 
