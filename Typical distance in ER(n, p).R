@@ -1,5 +1,4 @@
-# Studying the Typical Distance in Erdős–Rényi Random Graph through Simulations
-# A project by Aditya Ghosh and Sayak Chatterjee, under the supervision of Prof. Antar Bandyopadhyay
+# Studying the Typical Distance in Erdős–Rényi Random Graph through Simulations, a project by Aditya Ghosh and Sayak Chatterjee, under the supervision of Prof. Antar Bandyopadhyay
 
 library(igraph)
 
@@ -41,6 +40,7 @@ for(j in 1:length(a)){
 	num[i,j] = length(subset(d, d<Inf))
 	}
 }
+
 # Next we calculate the sample mean and s.d. for each pair of n and c = np
 mcbyn = matrix(nrow=length(size),ncol=length(a))
 for(j in 1:length(a)) mcbyn[,j] = apply(D[,,j], 2, function(dat) mean(dat[dat<Inf]))
@@ -48,9 +48,10 @@ dimnames(mcbyn) = list(size, a)
 scbyn = matrix(nrow=length(size),ncol=length(a))
 for(j in 1:length(a)) scbyn[,j] = apply(D[,,j], 2, function(dat) sd(dat[dat<Inf]))
 dimnames(scbyn) = list(size, a)
+					
 # Saving the data for future use:
 for(j in 1:length(a))
-write.csv(D[ , , j],paste("yourpath/cbyn",a[j],".csv",sep=""), row.names = FALSE)
+write.csv(D[,,j],paste("yourpath/cbyn",a[j],".csv",sep=""), row.names = FALSE)
 
 #-----------------------------------------------------------------------------------
 #                               II. Histograms
@@ -185,14 +186,12 @@ for(i in 1:6){
 #                              I. Data Generation
 #-----------------------------------------------------------------------------------
 
-size = c(20,60,100,150,250,400,675,1000,2000)	
+size = c(20, 60, 100, 150, 250, 400, 675, 1000, 2000)	
 a = seq(1.1, 2.5, by = 0.2)	
 rpt = 500
 
-numc = matrix(nrow = length(size), ncol = length(a), dimnames=list(size,a)) 
-# numc stores how many times the observed distance is finite
-Dc = array(dim = c(rpt, length(size), length(a)), dimnames = list(1:rpt,size,a)) 
-# Dc is a 3D array for storing the observed typical distances
+numc = matrix(nrow = length(size), ncol = length(a), dimnames=list(size,a)) # numc stores how many times the observed distance is finite
+Dc = array(dim = c(rpt, length(size), length(a)), dimnames = list(1:rpt,size,a)) # Dc is a 3D array for storing the observed typical distances
 for(j in 1:length(a)){
 	for(i in 1:length(size)){
 	n = size[i]
@@ -202,6 +201,7 @@ for(j in 1:length(a)){
 	numc[i,j] = length(subset(d, d<Inf))
 	}
 }
+					
 # Next we calculate the sample mean and s.d. for each pair of n and c = np
 mconn = matrix(nrow=length(size),ncol=length(a))
 for(j in 1:length(a)) mconn[,j] = apply(Dc[,,j], 2, function(dat) mean(dat[dat<Inf]))
@@ -319,7 +319,6 @@ set.seed(125)
 size = c(20,60,100,150,250,400,675,1000,2000)
 cp = seq(0.1,0.9,by=0.2)
 rpt = 200 		
-
 numct = matrix(nrow = length(size), ncol = length(cp), dimnames=list(size,cp)) 
 Dct = array(dim = c(rpt, length(size), length(cp)), dimnames = list(1:rpt,size,cp))
 for(j in 1:length(cp)){
@@ -330,6 +329,7 @@ for(j in 1:length(cp)){
 	numct[i,j] = length(subset(d, d<Inf))
 	}
 }
+					
 # Next we calculate the sample mean and s.d. for each pair of n and p
 k = length(cp)
 mcnst = matrix(nrow=length(size), ncol=k)
@@ -340,7 +340,7 @@ for(j in 1:k) scnst[,j] = apply(Dct[,,j], 2, function(dat) sd(dat[dat<Inf]))
 dimnames(scnst) = list(size, cp)
 
 for(j in 1:length(cp))
-write.csv(Dct[ , , j],paste("yourpath/const",cp[j],".csv",sep=""), row.names = FALSE)
+write.csv(Dct[,,j],paste("yourpath/const",cp[j],".csv",sep=""), row.names = FALSE)
 
 #-----------------------------------------------------------------------------------
 #                                II. Histograms
