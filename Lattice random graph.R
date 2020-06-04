@@ -11,26 +11,19 @@ library(igraph)
 #-----------------------------------------------------------------------------------
 
 vert<-function(i,j,n)
-{
 	return((i-1)*(2*n+1)+j)
-}
 
-Lattice<-function(n,p)
-{
+Lattice<-function(n,p){
 	g=make_empty_graph(directed=F)+vertices(1:((2*n+1)^2),color="black")
-	for(i in 1:(2*n))
-	{
-		for(j in 1:(2*n))
-		{
+	for(i in 1:(2*n)){
+		for(j in 1:(2*n)){
 			if(rbinom(1,1,p)==1)(g=g+edges(vert(i,j,n),vert(i+1,j,n)))
 			if(rbinom(1,1,p)==1)(g=g+edges(vert(i,j,n),vert(i,j+1,n)))
 		}
 		if(rbinom(1,1,p)==1)(g=g+edges(vert(i,2*n+1,n),vert(i+1,2*n+1,n)))
 	}
 	for(j in 1:(2*n))
-	{
 		if(rbinom(1,1,p)==1)(g=g+edges(vert(2*n+1,j,n),vert(2*n+1,j+1,n)))
-	}
 	plot(g,layout=layout_on_grid(g),vertex.size=2,vertex.col="black")
 	return(g)
 }
@@ -44,35 +37,30 @@ PlayLattice<-function(n,p,N=1000){
 	}
 	return(d)
 }
-
 # PlayLattice generates realizations of H_n for Lat(n, p) for N times and returns the vector of the observed typical distances
+
+# Generating and storing the data in a folder
 
 n=seq(5,40,by=5)
 p=seq(0.55,0.95,by=0.05)
 N=1000
 H = array(0,c(length(p),length(n),N))
 t1<-proc.time()
-for(i in 1:length(p))
-{
-	for(j in 1:length(n))
-	{
+for(i in 1:length(p)){
+	for(j in 1:length(n)){
 		H[i,j,]=PlayLattice(n[j],p[i],1000)
 		write.table("your.path/n_jp_i",header=T)
 	}
 }
 t2<-proc.time()
 
-# Generating and storing the data in a folder
-
 #-----------------------------------------------------------------------------------
 #                               II. Histograms
 #-----------------------------------------------------------------------------------
 
-for(j in 1:length(p)
-{
+for(j in 1:length(p){
 	layout(matrix(1:8,nrow=2,byrow=T))
-	for(i in 1:length(n))
-	{
+	for(i in 1:length(n)){
 		a=unlist(read.table("your.path/n_jp_i",header=T))
 		d=subset(a,a<Inf)
 		hist(d,breaks=10,col="peachpuff",border="black",prob=TRUE,xlab="Typical distance",main = paste("For n =",n[i],"& p =",p[j]))
@@ -92,10 +80,8 @@ dimnames(Mean_mat)=list(n,p)
 dimnames(Sd_mat)=list(n,p)
 dimnames(Prop_mat)=list(n,p)
 
-for(i in 1:length(n))
-{
-	for(j in 1:length(p))
-	{
+for(i in 1:length(n)){
+	for(j in 1:length(p)){
 		a=unlist(read.table("your.path/n_jp_i",header=T))
 		b=subset(a,a<Inf)
 		Mean_mat[i,j]=mean(b)
@@ -105,7 +91,6 @@ for(i in 1:length(n))
 }
 
 k=length(p)
-
 #-------------- Plotting the sample mean when the typical distance is finite
 
 matplot(Mean_mat, ylim=c(min(Mean_mat),max(Mean_mat)),type="o",pch=20,lty=1,lwd=1.9,col=rainbow(k+1)[-5],xlab="Graph dimension (n)",main="The mean typical distance in lattice when its finite",ylab="Mean typical distance",xaxt="n")
@@ -131,11 +116,9 @@ legend("topright",inset=c(-0.11,0), legend=paste("p=",rev(p),sep=""),col=rev(rai
 #                              IV. Testing Normality
 #-----------------------------------------------------------------------------------
 
-for(j in 1:length(p)
-{
+for(j in 1:length(p){
 	layout(matrix(1:8,nrow=2,byrow=T))
-	for(i in 1:length(n))
-	{
+	for(i in 1:length(n)){
 		a=unlist(read.table("your.path/n_jp_i",header=T))
 		b=subset(a,a<Inf)
 		qqnorm((b-mean(b))/sd(b))
@@ -145,8 +128,7 @@ for(j in 1:length(p)
 
 # QQ plots
 
-mychisq.test<-function(dat)
-{
+mychisq.test<-function(dat){
 	sdat = (dat - mean(dat))/sd(dat)
 	f.os = table(cut(sdat, breaks=c(-Inf,-2:2,Inf)))
 	f.ex = (pnorm(c(-2:2,Inf)) - pnorm(c(-Inf,-2:2)))*length(sdat)
@@ -154,8 +136,7 @@ mychisq.test<-function(dat)
 	return(pchisq(chi.stat, df=length(f.os)-1, lower.tail=FALSE))
 }
 
-myks.test<-function(dat)
-{
+myks.test<-function(dat){
 	sdat = (dat - mean(dat))/sd(dat) 
 	jdat = sdat + rnorm(length(sdat), mean=0, sd=0.001) # jittered to remove ties
 	y = rnorm(length(sdat))
@@ -163,8 +144,7 @@ myks.test<-function(dat)
 	return(pval)
 }
 
-norm.testing<-function(sdat)
-{
+norm.testing<-function(sdat){
 	sw = shapiro.test(sdat)$p.value
 	ks = myks.test(sdat)
 	psn = mychisq.test(sdat)
@@ -174,10 +154,8 @@ norm.testing<-function(sdat)
 testlist = c("Pearson chi-square", "Kolmogorov-Smirnov", "Shapiro-Wilk")
 P = array(dim = c(3, length(n), length(p)), dimnames = list(testlist,n,p))
 
-for(j in 1:length(p))
-{
-	for(i in 1:length(n))
-	{
+for(j in 1:length(p)){
+	for(i in 1:length(n)){
 		a=unlist(read.table("your.path/n_jp_i",header=T))
 		dat=subset(a,a<Inf)
 		sdat = (dat - mean(dat))/sd(dat)
@@ -185,8 +163,7 @@ for(j in 1:length(p))
 	}
 }
 
-for(i in 1:3)
-{
+for(i in 1:3){
 	cat("\n Name of the test : ", testlist[i],"\n\n")
 	print(round(P[i, ,], 5))
 	cat("\n")
@@ -242,7 +219,7 @@ B1<-function(x,t){
 	}
 	return(g)
 }
-
+		
 B2<-function(x,s,t){
 	n=length(x)
 	g=0
@@ -314,10 +291,8 @@ test_sym_large<-function(x){
 }
 
 P1 = array(dim = c(length(n), length(p)), dimnames = list(n,p)) 
-for(j in 1:length(p))
-{
-	for(i in 1:length(n))
-	{
+for(j in 1:length(p)){
+	for(i in 1:length(n)){
 		a=unlist(read.table("your.path/n_jp_i",header=T))
 		dat=subset(a,a<Inf)
 		sdat = (dat - mean(dat))/sd(dat)
