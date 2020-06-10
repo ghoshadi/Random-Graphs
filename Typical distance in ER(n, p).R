@@ -356,7 +356,7 @@ for(j in 1:k){
 		main = paste("for n =",size[i]," & p =", cp[j]))
 		x = seq(min(d-0.5), max(d+0.5), length=1000)
 		lines(x,dnorm(x,mean=mcnst[i,j],sd=scnst[i,j]), lwd=2, col="dark blue")
-		lines(x,dnorm(x,mean=log(n)/log(cp[j]*n),sd=scnst[i,j]), lwd=2, col="dark red")
+		lines(x,dnorm(x,mean=log(size[i])/log(cp[j]*size[i]),sd=scnst[i,j]), lwd=2, col="dark red")
 	}
 	dev.off()
 }
