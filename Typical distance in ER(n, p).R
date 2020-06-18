@@ -1,4 +1,5 @@
-# Studying the Typical Distance in Erdős–Rényi Random Graph through Simulations, a project by Aditya Ghosh and Sayak Chatterjee, under the supervision of Prof. Antar Bandyopadhyay
+# Studying the Typical Distance in Erdős–Rényi Random Graph through Simulations
+# A project by Aditya Ghosh and Sayak Chatterjee, under the supervision of Prof. Antar Bandyopadhyay
 
 library(igraph)
 
@@ -95,32 +96,43 @@ for(j in 1:length(a)){
 error = mcbyn
 for(i in 1:length(size)) 
 	for(j in 1:length(a)) 
-		error[i,j] = mcbyn[i,j]*log(a[j])/log(size[i]) - 1 
+		error[i,j] = mcbyn[i,j]*log(a[j])/log(size[i]) - 1  
 # error is the matrix that stores the o(1) term (observed)
 
-quartz.options(width=10, height=7)
 par(family="System Font")
 k = length(a)
 #-------------- Plotting the o(1) term = (sample mean*log(c)/log(n) - 1)
 matplot(error, ylim=c(min(error),max(error)), type = "o", pch=20, lty=1, lwd=3, col = rainbow(k+1)[-5], xlab="Graph size n", main="The o(1) term in the theoretical mean of the typical distance in ER(n, c/n)", ylab="sample mean*log(c)/log(n) - 1", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("c = ",rev(a),sep=""),
-		col=rev(rainbow(k+1)[-5]),lwd=3)
+legend("topright",inset=c(-0.3,0), legend=paste("c = ",rev(a),sep=""), col=rev(rainbow(k+1)[-5]),lwd=3) 
+# choose the inset parameter in such a manner that the legend fits perfectly to the quartz window
+					
+#-------------- Plotting the o(1) term as a function of c
+matplot(t(error), ylim=c(min(t(error)),max(t(error))), type = "o", pch=20, lty=1, lwd=3, col = rainbow(k+1), xlab="Value of c = np", main="       Plot of the o(1) term for ER(n, c/n) as a function of c", ylab="The o(1) term", xaxt = "n")
+axis(side=1, at=1:length(a), labels=a)
+par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+legend("topright",inset=c(-0.3,0), legend=paste("n = ",(size),sep=""), col=(rainbow(k+1)),lwd=3)	
 
 #-------------- Plotting the sample s.d. (unscaled)
 matplot(scbyn, ylim=c(min(scbyn),max(scbyn)), type = "o", pch=20, lty=1, lwd=3, col = (rainbow(k+1)[-5]), xlab="Graph size n", main="Sample s.d. for the typical distance in ER(n, c/n)", ylab="Sample s.d.", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("c = ",a,sep=""),
-		col=(rainbow(k+1)[-5]),lwd=3)
+legend("topright",inset=c(-0.3,0), legend=paste("c = ",a,sep=""), col=(rainbow(k+1)[-5]),lwd=3)
+					
+#-------------- Plotting the sample s.d. as a function of c (unscaled)
+
+matplot(t(scbyn), ylim=c(min(t(scbyn)),max(t(scbyn))), type = "o", pch=20, lty=1, lwd=3, col = (rainbow(k+1)), xlab="Value of c = np", main="          Sample s.d. for the typical distance as a function of c = np", ylab="Sample s.d.", xaxt = "n")
+axis(side=1,at=1:length(a),labels=a)
+par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+legend("topright",inset=c(-0.3,0), legend=paste("n = ",size,sep=""), col=(rainbow(k+1)),lwd=3)
 
 #-------------- Plotting the proportion of times the typical distance is finite
 matplot(num/rpt, type="o", pch=20, lty=1, lwd=3, col = rainbow(k+1)[-5], xlab="Graph size n", main="Proportion of times the typical distance is finite, for p = c/n (where c > 1)", ylab="Proportion of times the typical distance is finite", xaxt = "n", yaxt = "n")
 axis(side=1, at=1:length(size), labels=size)
 axis(side=2, at=seq(0.1, max(num/rpt), by=0.1))
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright", inset=c(-0.18,0), legend=paste("c =",rev(a),sep=" "), col=rev(rainbow(k+1)[-5]), lty=1, lwd=3)
+legend("topright", inset=c(-0.3,0), legend=paste("c =",rev(a),sep=" "), col=rev(rainbow(k+1)[-5]), lty=1, lwd=3)
 
 #-------------- Column mean and s.d. of the '#times d is finite' matrix
 par(mfrow=t(1:2), mai = c(1, 0.5, 0.4, 0.4))
@@ -256,21 +268,24 @@ error = mconn
 for(i in 1:length(size)) 
 	for(j in 1:length(a)) 
 		error[i,j] = mconn[i,j]*log(a[j]*log(size[i]))/log(size[i]) - 1
-		
 k = length(a)
 #-------------- Plotting the o(1) term = (sample mean - theo. mean)*log(np)/log(n)
 matplot(error, ylim=c(min(error),max(error)), type = "o", pch=20, lty=1, lwd=3, col = rainbow(k+1)[-5], xlab="Graph size n", main="The o(1) term in the theoretical mean of the typical distance in ER(n, c*log(n)/n)", ylab="sample mean*log(c*log n)/log n - 1", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("c = ",rev(a),sep=""),
-		col=rev(rainbow(k+1)[-5]),lwd=3)
+legend("topright",inset=c(-0.18,0), legend=paste("c = ",rev(a),sep=""), col=rev(rainbow(k+1)[-5]),lwd=3)
 
+#-------------- Plotting the o(1) term as a function of c
+matplot(error, ylim=c(min(error),max(error)), type = "o", pch=20, lty=1, lwd=3, col = rainbow(k+1)[-5], xlab="Graph size n", main="             Plot of the o(1) term = sample mean*log(c*log(n))/log(n) - 1", ylab="the o(1) term", xaxt = "n")
+axis(side=1,at=1:length(size),labels=size)
+par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+legend("topright",inset=c(-0.23,0), legend=paste("c = ",rev(a),sep=""), col=rev(rainbow(k+1)[-5]),lwd=3)						
+					
 #-------------- Plotting the sample s.d. (unscaled)
 matplot(sconn, ylim=c(min(sconn),max(sconn)), type = "o", pch=20, lty=1, lwd=3, col = (rainbow(k+1)[-5]), xlab="Graph size n", main="Sample s.d. for the typical distance in ER(n, c*log(n)/n)", ylab="Sample s.d.", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("c = ",a,sep=""),
-		col=(rainbow(k+1)[-5]),lwd=3)
+legend("topright",inset=c(-0.18,0), legend=paste("c = ",a,sep=""), col=(rainbow(k+1)[-5]),lwd=3)
 
 #-------------- Plotting the proportion of times the typical distance is finite
 matplot(numc/rpt, type="o", pch=20, lty=1, lwd=3, col = rainbow(k+1)[-5], xlab="Graph size n", main="Proportion of times the typical distance is finite, for p = c*log(n)/n (where c > 1)", ylab="Proportion of times the typical distance is finite", xaxt = "n", yaxt = "n")
@@ -391,22 +406,20 @@ cols = c("red","orange","green","blue","purple")
 matplot(error, ylim=c(min(error),max(error)), type = "o", pch=20, lty=1, lwd=3, col = cols, xlab="Graph size n", main="The o(1) term in the theoretical mean of typical distance in ER(n, p) (p constant)", ylab="sample mean*log(np)/log(n) - 1", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("p = ",cp,sep=""),
-		col=cols,lwd=3)
+legend("topright",inset=c(-0.18,0), legend=paste("p = ",cp,sep=""), col=cols,lwd=3)
 
 #-------------- Plotting the sample s.d. (unscaled)
 matplot(scnst, ylim=c(min(scnst),max(scnst)), type = "o", pch=20, lty=1, lwd=3, col = (cols), xlab="Graph size n", main="Sample s.d. for typical distance of ER(n, p) (p constant)", ylab="Sample s.d.", xaxt = "n")
 axis(side=1,at=1:length(size),labels=size)
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-legend("topright",inset=c(-0.18,0), legend=paste("p = ",cp,sep=""),
-		col=(cols),lwd=3)
+legend("topright",inset=c(-0.18,0), legend=paste("p = ",cp,sep=""), col=(cols),lwd=3)
 
 #-----------------------------------------------------------------------------------
 #                               IV. Testing Normality
 #-----------------------------------------------------------------------------------
 
 testlist = c("Pearson chi-square", "Kolmogorov-Smirnov", "Shapiro-Wilk", "Cramer-von Mises", "Shapiro-Francia", "Anderson-Darling")
-P = array(dim = c(6, length(size), length(cp)), dimnames = list(testlist,size,cp)) # 3D array for storing the testing p-values
+P = array(dim = c(6, length(size), length(cp)), dimnames = list(testlist, size, cp)) # 3D array for storing the testing p-values
 for(j in 1:k){
 	for(i in 1:length(size)){
 	dat = Dct[,i,j][!is.infinite(Dct[,i,j])] 
@@ -426,8 +439,7 @@ for(i in 1:6){
 
 f<-function(a,b,c) sign(a+b-2*c)+sign(b+c-2*a)+sign(c+a-2*b)
 B1<-function(x,t){
-	n=length(x)
-	g=0
+	n=length(x); g=0
 	if(t==1){
 		for(j in (t+1):(n-1))
 			for(k in (j+1):n)
@@ -470,8 +482,7 @@ B1<-function(x,t){
 	return(g)
 }
 B2<-function(x,s,t){
-	n=length(x)
-	g=0
+	n=length(x); g=0
 	if((t-s)==1){
 		if(s==1){
 			for(k in 3:n)
@@ -518,15 +529,13 @@ B2<-function(x,s,t){
 }
 test_sym_large<-function(x){
 	n=length(x)
-	b1=0
-	b=0
+	b1=0; b=0
 	for(t in 1:n){
 		k=B1(x,t)
 		b1=b1+k^2
 		b=b+k
 	}
-	T=b/3
-	b2=0
+	T=b/3; b2=0
 	for(s in 1:(n-1))
 		for(t in (s+1):n)
 			b2=b2+(B2(x,s,t))^2
@@ -537,6 +546,7 @@ test_sym_large<-function(x){
 	names(ret.list)=c("obs.stat","p.val")
 	return(ret.list)
 }
+	
 P1 = array(dim = c(length(size), length(a)), dimnames = list(size, a)) 
 for(j in 1:length(a)){
 	for(i in 1:length(size)){
@@ -545,6 +555,7 @@ for(j in 1:length(a)){
 	P1[i,j] = test_sym_large(sdat)$p.val
 	}
 }
+	
 P2 = array(dim = c(length(size), length(a)), dimnames = list(size, a)) 
 for(j in 1:length(a)){
 	for(i in 1:length(size)){
@@ -553,6 +564,7 @@ for(j in 1:length(a)){
 	P2[i,j] = test_sym_large(sdat)$p.val
 	}
 }
+	
 P3 = array(dim = c(length(size), length(cp)), dimnames = list(size,cp)) 
 for(j in 1:length(cp)){
 	for(i in 1:length(size)){
@@ -561,6 +573,7 @@ for(j in 1:length(cp)){
 	P3[i,j] = test_sym_large(sdat)$p.val
 	}
 }
+	
 # P-values of the test of Symmetry
 print(round(P1, 4)) # for the p = c/n case
 print(round(P2, 4)) # for the p = c*log(n)/n case
